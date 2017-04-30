@@ -1,0 +1,15 @@
+##########################################################
+# EnderPearlCooldown Configuration - Plugin by: Trigary #
+##########################################################
+# Permissions:
+# enderpearlcooldown.bypass - Bypass the cooldown system
+#
+# Commands: None
+
+# Cooldown duration in seconds
+duration: 10
+
+# Which sound should be played when a cooldown is still active and a player tries to throw an ender pearl
+# Example: block.anvil.land (List: http://minecraft.gamepedia.com/Sounds.json#Sound_events)
+# Set to two " marks to turn this feature off
+sound: ""

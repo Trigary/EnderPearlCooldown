@@ -1,0 +1,6 @@
+name: ${artifactId}
+version: ${version}
+author: ${author}
+description: ${description}
+website: ${url}
+main: ${mainClass}
