@@ -9,7 +9,12 @@
 # Cooldown duration in seconds
 duration: 10
 
-# Which sound should be played when a cooldown is still active and a player tries to throw an ender pearl
+# This message will be sent when a player tries to throw an ender pearl while he is on cooldown
+# %time% will be replaced by the number of seconds left
+# Set to two " marks to turn this feature off ("")
+message: "&fWait &b%time%&f more seconds before using an ender pearl again."
+
+# This sound will be played when a player tries to throw an ender pearl while he is on cooldown
 # Example: block.anvil.land (List: http://minecraft.gamepedia.com/Sounds.json#Sound_events)
-# Set to two " marks to turn this feature off
+# Set to two " marks to turn this feature off ("")
 sound: ""

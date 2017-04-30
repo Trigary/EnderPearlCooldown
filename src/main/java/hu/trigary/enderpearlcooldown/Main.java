@@ -1,5 +1,6 @@
 package hu.trigary.enderpearlcooldown;
 
+import org.bukkit.ChatColor;
 import org.bukkit.SoundCategory;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;
@@ -19,7 +20,7 @@ public class Main extends JavaPlugin implements Listener {
 		FileConfiguration config = getConfig ();
 		duration = config.getInt ("duration") * 1000;
 		sound = config.getString ("sound");
-		playSound = (sound != null && !sound.equals (""));
+		message = ChatColor.translateAlternateColorCodes ('&', config.getString ("message"));
 		
 		cooldowns = new HashMap<> ();
 		getServer ().getPluginManager ().registerEvents (this, this);
@@ -27,25 +28,37 @@ public class Main extends JavaPlugin implements Listener {
 	
 	private long duration;
 	private String sound;
-	private boolean playSound;
+	private String message;
 	private Map<UUID, Long> cooldowns;
+	
+	
 	
 	@SuppressWarnings ("unused")
 	@EventHandler (ignoreCancelled = true)
-	public void onProjectileLaunch (ProjectileLaunchEvent event) {
+	void onProjectileLaunch (ProjectileLaunchEvent event) {
 		if (event.getEntity () instanceof EnderPearl && event.getEntity ().getShooter () instanceof Player) {
 			Player shooter = (Player)event.getEntity ().getShooter ();
 			if (!shooter.hasPermission ("enderpearlcooldown.bypass")) {
 				cooldowns.entrySet ().removeIf ((entry) -> entry.getValue () < System.currentTimeMillis ());
-				if (cooldowns.containsKey (shooter.getUniqueId ())) {
+				Long cooldown = cooldowns.get (shooter.getUniqueId ());
+				if (cooldown != null) {
 					event.setCancelled (true);
-					if (playSound) {
-						shooter.playSound (shooter.getLocation (), sound, SoundCategory.MASTER, 1, 1);
-					}
+					executeAction (shooter, cooldown);
 				} else {
 					cooldowns.put (shooter.getUniqueId (), System.currentTimeMillis () + duration);
 				}
 			}
+		}
+	}
+	
+	
+	
+	private void executeAction (Player player, long cooldown) {
+		if (sound != null && !sound.equals ("")) {
+			player.playSound (player.getLocation (), sound, SoundCategory.MASTER, 1, 1);
+		}
+		if (message != null && !message.equals ("")) {
+			player.sendMessage (message.replace ("%time%", String.valueOf (Math.floorDiv (cooldown - System.currentTimeMillis (), 1000) + 1)));
 		}
 	}
 }
