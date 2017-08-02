@@ -1,10 +1,9 @@
-##########################################################
-# EnderPearlCooldown Configuration - Plugin by: Trigary #
-##########################################################
-# Permissions:
-# enderpearlcooldown.bypass - Bypass the cooldown system
-#
+#############################################################
+# - EnderPearlCooldown Configuration - Plugin by: Trigary - #
+#############################################################
 # Commands: None
+# Permissions: enderpearlcooldown.bypass - Bypass the cooldown system
+
 
 # Cooldown duration in seconds
 duration: 10

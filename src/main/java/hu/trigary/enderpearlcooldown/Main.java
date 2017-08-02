@@ -12,18 +12,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-@SuppressWarnings ("unused")
 public class Main extends JavaPlugin implements Listener {
 	@Override
-	public void onEnable () {
-		saveDefaultConfig ();
-		FileConfiguration config = getConfig ();
-		duration = config.getInt ("duration") * 1000;
-		sound = config.getString ("sound");
-		message = ChatColor.translateAlternateColorCodes ('&', config.getString ("message"));
+	public void onEnable() {
+		saveDefaultConfig();
+		FileConfiguration config = getConfig();
+		duration = config.getInt("duration") * 1000;
+		sound = config.getString("sound");
+		message = ChatColor.translateAlternateColorCodes('&', config.getString("message"));
 		
-		cooldowns = new HashMap<> ();
-		getServer ().getPluginManager ().registerEvents (this, this);
+		cooldowns = new HashMap<>();
+		getServer().getPluginManager().registerEvents(this, this);
 	}
 	
 	private long duration;
@@ -33,32 +32,35 @@ public class Main extends JavaPlugin implements Listener {
 	
 	
 	
-	@SuppressWarnings ("unused")
-	@EventHandler (ignoreCancelled = true)
-	void onProjectileLaunch (ProjectileLaunchEvent event) {
-		if (event.getEntity () instanceof EnderPearl && event.getEntity ().getShooter () instanceof Player) {
-			Player shooter = (Player)event.getEntity ().getShooter ();
-			if (!shooter.hasPermission ("enderpearlcooldown.bypass")) {
-				cooldowns.entrySet ().removeIf ((entry) -> entry.getValue () < System.currentTimeMillis ());
-				Long cooldown = cooldowns.get (shooter.getUniqueId ());
-				if (cooldown != null) {
-					event.setCancelled (true);
-					executeAction (shooter, cooldown);
-				} else {
-					cooldowns.put (shooter.getUniqueId (), System.currentTimeMillis () + duration);
-				}
-			}
+	@EventHandler(ignoreCancelled = true)
+	void onEnderPearlThrow(ProjectileLaunchEvent event) {
+		if (!(event.getEntity() instanceof EnderPearl) || !(event.getEntity().getShooter() instanceof Player)) {
+			return;
+		}
+		
+		Player player = (Player)event.getEntity().getShooter();
+		if (player.hasPermission("enderpearlcooldown.bypass")) {
+			return;
+		}
+		
+		Long cooldown = cooldowns.get(player.getUniqueId());
+		if (cooldown != null && cooldown > System.currentTimeMillis()) {
+			event.setCancelled(true);
+			executeAction(player, cooldown);
+		} else {
+			cooldowns.put(player.getUniqueId(), System.currentTimeMillis() + duration);
 		}
 	}
 	
 	
 	
-	private void executeAction (Player player, long cooldown) {
-		if (sound != null && !sound.equals ("")) {
-			player.playSound (player.getLocation (), sound, SoundCategory.MASTER, 1, 1);
+	private void executeAction(Player player, long cooldown) {
+		if (!sound.isEmpty()) {
+			player.playSound(player.getLocation(), sound, SoundCategory.MASTER, 1, 1);
 		}
-		if (message != null && !message.equals ("")) {
-			player.sendMessage (message.replace ("%time%", String.valueOf (Math.floorDiv (cooldown - System.currentTimeMillis (), 1000) + 1)));
+		
+		if (!message.isEmpty()) {
+			player.sendMessage(message.replace("%time%", String.valueOf(Math.floorDiv(cooldown - System.currentTimeMillis(), 1000) + 1)));
 		}
 	}
 }

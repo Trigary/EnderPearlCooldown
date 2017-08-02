@@ -6,7 +6,7 @@
 
     <groupId>hu.trigary</groupId>
     <artifactId>EnderPearlCooldown</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 
     <properties>
         <mainClass>${groupId}.enderpearlcooldown.Main</mainClass>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <version>1.12-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
