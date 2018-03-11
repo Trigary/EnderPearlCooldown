@@ -13,22 +13,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class Main extends JavaPlugin implements Listener {
-	@Override
-	public void onEnable() {
-		saveDefaultConfig();
-		FileConfiguration config = getConfig();
-		duration = config.getInt("duration") * 1000;
-		sound = config.getString("sound");
-		message = ChatColor.translateAlternateColorCodes('&', config.getString("message"));
-		
-		cooldowns = new HashMap<>();
-		getServer().getPluginManager().registerEvents(this, this);
-	}
-	
+	private final Map<UUID, Long> cooldowns = new HashMap<>();
 	private long duration;
 	private String sound;
 	private String message;
-	private Map<UUID, Long> cooldowns;
+	
+	@Override
+	public void onEnable() {
+		saveDefaultConfig();
+		duration = getConfig().getInt("duration") * 1000;
+		sound = getConfig().getString("sound");
+		message = ChatColor.translateAlternateColorCodes('&', getConfig().getString("message"));
+		getServer().getPluginManager().registerEvents(this, this);
+	}
 	
 	
 	
@@ -38,7 +35,7 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		Player player = (Player)event.getEntity().getShooter();
+		Player player = (Player) event.getEntity().getShooter();
 		if (player.hasPermission("enderpearlcooldown.bypass")) {
 			return;
 		}
